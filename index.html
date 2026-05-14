@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Study Progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface2: #f0ede6;
+    --border: #e2ddd6;
+    --border2: #ccc8c0;
+    --text: #1a1916;
+    --text2: #6b6860;
+    --text3: #a09d98;
+    --green: #1d9e75;
+    --green-light: #e1f5ee;
+    --green-dark: #0f6e56;
+    --blue: #3266ad;
+    --pink: #d4537e;
+    --amber: #ba7517;
+    --purple: #534ab7;
+    --coral: #d85a30;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+  }
+  .container { max-width: 780px; margin: 0 auto; }
+  .header { margin-bottom: 2rem; }
+  .header h1 { font-size: 22px; font-weight: 600; color: var(--text); }
+  .header p { font-size: 14px; color: var(--text2); margin-top: 4px; }
+
+  /* Metrics */
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.75rem; }
+  .metric { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .metric-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .metric-value { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+  .metric-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+  /* Section header */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .section-title { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* Add button */
+  .add-btn {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 6px 14px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .add-btn:hover { background: var(--surface2); border-color: var(--border2); }
+
+  /* Modules */
+  .modules { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+  .module-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 18px;
+  }
+  .module-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .module-name { font-size: 14px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 9px; }
+  .color-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .module-right { display: flex; align-items: center; gap: 10px; }
+  .module-pct { font-size: 13px; color: var(--text2); font-family: 'DM Mono', monospace; }
+  .trash-btn { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 14px; padding: 2px 4px; transition: color 0.15s; }
+  .trash-btn:hover { color: #e24b4a; }
+  .bar-bg { background: var(--surface2); border-radius: 4px; height: 5px; width: 100%; margin-bottom: 12px; }
+  .bar-fill { height: 5px; border-radius: 4px; transition: width 0.5s ease; }
+  .lessons { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-size: 12px;
+    padding: 4px 11px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border);
+    background: var(--surface2);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--border2); }
+  .chip.done { background: var(--green-light); color: var(--green-dark); border-color: #5dcaa5; }
+
+  /* Streak */
+  .streak-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 2rem; }
+  .day {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 0.5px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .day:hover { border-color: var(--border2); }
+  .day.studied { background: var(--green); border-color: var(--green); color: #fff; }
+  .day.today { border: 1.5px solid var(--green); color: var(--text2); }
+  .streak-hint { font-size: 11px; color: var(--text3); margin-top: 6px; }
+
+  /* Modal */
+  .overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border);
+    padding: 1.5rem;
+    width: 340px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+  }
+  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; color: var(--text); }
+  .modal input {
+    width: 100%; margin-bottom: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border2);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .modal input:focus { border-color: var(--green); }
+  .modal input::placeholder { color: var(--text3); }
+  .modal-hint { font-size: 11px; color: var(--text3); margin-top: -6px; margin-bottom: 10px; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+  .btn-cancel {
+    background: var(--surface2); border: 0.5px solid var(--border);
+    border-radius: var(--radius); padding: 7px 16px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; color: var(--text2);
+  }
+  .btn-save {
+    background: var(--green); border: none;
+    border-radius: var(--radius); padding: 7px 16px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; color: #fff; font-weight: 500;
+  }
+  .empty { color: var(--text3); font-size: 13px; padding: 1rem 0; }
+
+  @media (max-width: 600px) {
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>AI Study Progress</h1>
+    <p>Track your course modules, lessons, and daily streak</p>
+  </div>
+
+  <div class="metrics" id="metrics"></div>
+
+  <div class="section-header">
+    <div class="section-title">Modules</div>
+    <button class="add-btn" onclick="openModal()"><i class="fa fa-plus"></i> Add module</button>
+  </div>
+  <div class="modules" id="modules-list"></div>
+
+  <div class="section-header">
+    <div class="section-title">Study streak — last 28 days</div>
+  </div>
+  <div class="streak-grid" id="streak-grid"></div>
+  <div class="streak-hint">Click any day to toggle. Green = studied that day.</div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>Add module</h3>
+    <input id="mod-name" placeholder="Module name (e.g. Neural Networks)" />
+    <input id="mod-lessons" placeholder="Lessons (comma-separated)" />
+    <div class="modal-hint">e.g. Perceptron, Backprop, Activation Functions</div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveModule()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = ['#3266ad','#1d9e75','#d4537e','#ba7517','#534ab7','#d85a30'];
+const DAYS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+let state = {
+  modules: [
+    { id:1, name:'Foundations of ML', color:COLORS[0], lessons:['Linear Regression','Logistic Regression','Bias-Variance','Cross-validation'], done:[0,1] },
+    { id:2, name:'Neural Networks', color:COLORS[1], lessons:['Perceptron','Backpropagation','Activation Functions','Optimizers'], done:[0] },
+    { id:3, name:'Deep Learning', color:COLORS[2], lessons:['CNNs','RNNs','Transformers','Attention'], done:[] },
+    { id:4, name:'Reinforcement Learning', color:COLORS[3], lessons:['MDPs','Q-Learning','Policy Gradient'], done:[] },
+  ],
+  streak: [1,1,0,1,1,1,0,0,1,1,1,1,0,1,1,0,0,0,1,1,1,0,1,1,1,1,0,1],
+  nextId: 5
+};
+
+try { const s = localStorage.getItem('ai_progress'); if(s) state = JSON.parse(s); } catch(e){}
+function save() { try { localStorage.setItem('ai_progress', JSON.stringify(state)); } catch(e){} }
+
+function render() {
+  renderMetrics(); renderModules(); renderStreak();
+}
+
+function renderMetrics() {
+  const total = state.modules.reduce((a,m)=>a+m.lessons.length,0);
+  const done = state.modules.reduce((a,m)=>a+m.done.length,0);
+  const pct = total ? Math.round(done/total*100) : 0;
+  const streak = calcStreak();
+  const inProgress = state.modules.filter(m=>m.done.length>0&&m.done.length<m.lessons.length).length;
+  const completed = state.modules.filter(m=>m.lessons.length&&m.done.length===m.lessons.length).length;
+  document.getElementById('metrics').innerHTML = `
+    <div class="metric"><div class="metric-label">Overall</div><div class="metric-value">${pct}%</div><div class="metric-sub">${done} of ${total} lessons</div></div>
+    <div class="metric"><div class="metric-label">Streak</div><div class="metric-value">${streak}d</div><div class="metric-sub">days in a row</div></div>
+    <div class="metric"><div class="metric-label">In progress</div><div class="metric-value">${inProgress}</div><div class="metric-sub">modules active</div></div>
+    <div class="metric"><div class="metric-label">Completed</div><div class="metric-value">${completed}</div><div class="metric-sub">of ${state.modules.length} modules</div></div>
+  `;
+}
+
+function calcStreak() {
+  let s=0;
+  for(let i=state.streak.length-1;i>=0;i--){ if(state.streak[i]) s++; else break; }
+  return s;
+}
+
+function renderModules() {
+  const el = document.getElementById('modules-list');
+  if(!state.modules.length){ el.innerHTML='<div class="empty">No modules yet. Add your first one above.</div>'; return; }
+  el.innerHTML = state.modules.map(m=>{
+    const pct = m.lessons.length ? Math.round(m.done.length/m.lessons.length*100) : 0;
+    const chips = m.lessons.map((l,i)=>`<span class="chip ${m.done.includes(i)?'done':''}" onclick="toggleLesson(${m.id},${i})">${m.done.includes(i)?'✓ ':''}${l}</span>`).join('');
+    return `<div class="module-card">
+      <div class="module-top">
+        <div class="module-name"><span class="color-dot" style="background:${m.color}"></span>${m.name}</div>
+        <div class="module-right">
+          <span class="module-pct">${pct}%</span>
+          <button class="trash-btn" onclick="deleteModule(${m.id})" title="Remove"><i class="fa fa-trash"></i></button>
+        </div>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${m.color}"></div></div>
+      <div class="lessons">${chips}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderStreak() {
+  const today = 27;
+  document.getElementById('streak-grid').innerHTML = state.streak.map((v,i)=>
+    `<div class="day ${v?'studied':''} ${i===today?'today':''}" onclick="toggleDay(${i})" title="Toggle">${DAYS[i%7]}</div>`
+  ).join('');
+}
+
+function toggleLesson(id,idx){
+  const m=state.modules.find(x=>x.id===id); if(!m) return;
+  if(m.done.includes(idx)) m.done=m.done.filter(x=>x!==idx); else m.done.push(idx);
+  save(); render();
+}
+function toggleDay(i){ state.streak[i]=state.streak[i]?0:1; save(); render(); }
+function deleteModule(id){ state.modules=state.modules.filter(x=>x.id!==id); save(); render(); }
+
+function openModal(){ document.getElementById('overlay').classList.add('open'); document.getElementById('mod-name').focus(); }
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); document.getElementById('mod-name').value=''; document.getElementById('mod-lessons').value=''; }
+function saveModule(){
+  const name=document.getElementById('mod-name').value.trim();
+  const lessons=document.getElementById('mod-lessons').value.split(',').map(x=>x.trim()).filter(Boolean);
+  if(!name) return;
+  state.modules.push({id:state.nextId++,name,color:COLORS[state.modules.length%COLORS.length],lessons,done:[]});
+  save(); closeModal(); render();
+}
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+render();
+</script>
+</body>
+</html>
