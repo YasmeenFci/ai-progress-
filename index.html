@@ -432,11 +432,26 @@ function closeModal() {
   document.getElementById('mod-lessons').value='';
 }
 function saveModule() {
-  const name    = document.getElementById('mod-name').value.trim();
-  const lessons = document.getElementById('mod-lessons').value.split(',').map(x=>x.trim()).filter(Boolean);
-  if(!name) return;
-  state.modules.push({id:state.nextId++,name,color:COLORS[state.modules.length%COLORS.length],lessons,done:[]});
-  save(); closeModal(); render();
+  const name = document.getElementById('mod-name').value.trim();
+  const lessons = document.getElementById('mod-lessons').value.split(',').map(x => x.trim()).filter(Boolean);
+  
+  if (!name) return;
+
+  // Better color assignment - cycles properly
+  const colorIndex = state.modules.length % COLORS.length;
+  const newColor = COLORS[colorIndex];
+
+  state.modules.push({
+    id: state.nextId++,
+    name: name,
+    color: newColor,
+    lessons: lessons,
+    done: []
+  });
+
+  save(); 
+  closeModal(); 
+  render();
 }
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
